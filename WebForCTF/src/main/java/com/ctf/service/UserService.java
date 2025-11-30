@@ -16,6 +16,8 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+
+
     /**
      * Регистрация нового пользователя
      */
@@ -76,7 +78,6 @@ public class UserService {
             throw new RuntimeException("Ошибка при сохранении пользователя: " + e.getMessage());
         }
     }
-
 
     public Optional<User> authenticate(String username, String password) {
         Optional<User> user = userRepository.findByUsername(username);

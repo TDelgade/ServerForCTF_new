@@ -16,11 +16,20 @@ class AuthBypassChallenge {
     }
 
     initEventListeners() {
+        // Основные кнопки доступа
+        document.getElementById('checkAccessBtn')?.addEventListener('click', () => this.checkAccess());
+        document.getElementById('resetAccessBtn')?.addEventListener('click', () => this.resetChallenge());
+
+        // Кнопки методов эксплуатации
+        document.getElementById('cookieMethodBtn')?.addEventListener('click', () => exploitCookie());
+        document.getElementById('localStorageBtn')?.addEventListener('click', () => exploitLocalStorage());
+        document.getElementById('sessionStorageBtn')?.addEventListener('click', () => exploitSessionStorage());
+        document.getElementById('urlMethodBtn')?.addEventListener('click', () => exploitURLParams());
+
+        // Старая кнопка для обратной совместимости
         const checkAccessBtn = document.querySelector('button[onclick="checkAccess()"]');
         if (checkAccessBtn) {
-            checkAccessBtn.addEventListener('click', () => {
-                this.checkAccess();
-            });
+            checkAccessBtn.addEventListener('click', () => this.checkAccess());
         }
     }
 
@@ -60,13 +69,17 @@ class AuthBypassChallenge {
         this.isAdmin = true;
         this.showAdminContent();
         this.logSuccessfulBypass();
-        CTFPlatform.showNotification('Admin access granted!', 'success');
+        if (window.CTFPlatform && window.CTFPlatform.showNotification) {
+            window.CTFPlatform.showNotification('Admin access granted!', 'success');
+        }
     }
 
     denyAccess() {
         this.isAdmin = false;
         this.hideAdminContent();
-        CTFPlatform.showNotification('Access denied. Admin privileges required.', 'error');
+        if (window.CTFPlatform && window.CTFPlatform.showNotification) {
+            window.CTFPlatform.showNotification('Access denied. Admin privileges required.', 'error');
+        }
     }
 
     showAdminContent() {
@@ -117,12 +130,16 @@ class AuthBypassChallenge {
         `;
 
         flagElement.addEventListener('click', () => {
-            CTFUtils.copyToClipboard(flag);
+            if (window.CTFUtils && window.CTFUtils.copyToClipboard) {
+                window.CTFUtils.copyToClipboard(flag);
+            }
         });
 
         adminContent.appendChild(flagElement);
 
-        CTFUtils.copyToClipboard(flag);
+        if (window.CTFUtils && window.CTFUtils.copyToClipboard) {
+            window.CTFUtils.copyToClipboard(flag);
+        }
     }
 
     logAccessAttempt(success) {
@@ -192,17 +209,23 @@ class AuthBypassChallenge {
     // Методы для демонстрации уязвимостей
     setAdminCookie() {
         document.cookie = "isAdmin=true; path=/; max-age=3600";
-        CTFPlatform.showNotification('Admin cookie set. Try accessing admin panel.', 'info');
+        if (window.CTFPlatform && window.CTFPlatform.showNotification) {
+            window.CTFPlatform.showNotification('Admin cookie set. Try accessing admin panel.', 'info');
+        }
     }
 
     setAdminLocalStorage() {
         localStorage.setItem('admin', 'true');
-        CTFPlatform.showNotification('Admin flag set in localStorage.', 'info');
+        if (window.CTFPlatform && window.CTFPlatform.showNotification) {
+            window.CTFPlatform.showNotification('Admin flag set in localStorage.', 'info');
+        }
     }
 
     setAdminSessionStorage() {
         sessionStorage.setItem('privileges', 'admin');
-        CTFPlatform.showNotification('Admin privileges set in sessionStorage.', 'info');
+        if (window.CTFPlatform && window.CTFPlatform.showNotification) {
+            window.CTFPlatform.showNotification('Admin privileges set in sessionStorage.', 'info');
+        }
     }
 
     resetChallenge() {
@@ -222,7 +245,9 @@ class AuthBypassChallenge {
         url.searchParams.delete('debug');
         window.history.replaceState({}, '', url);
 
-        CTFPlatform.showNotification('Challenge reset. All bypass methods cleared.', 'info');
+        if (window.CTFPlatform && window.CTFPlatform.showNotification) {
+            window.CTFPlatform.showNotification('Challenge reset. All bypass methods cleared.', 'info');
+        }
     }
 }
 
@@ -250,6 +275,23 @@ function exploitSessionStorage() {
     if (window.authBypassChallenge) {
         window.authBypassChallenge.setAdminSessionStorage();
     }
+}
+
+function exploitURLParams() {
+    const url = new URL(window.location);
+    url.searchParams.set('admin', 'true');
+    window.history.replaceState({}, '', url);
+
+    if (window.CTFPlatform && window.CTFPlatform.showNotification) {
+        window.CTFPlatform.showNotification('URL parameters set. Try checking access now.', 'info');
+    }
+
+    // Автоматически проверяем доступ после установки параметров
+    setTimeout(() => {
+        if (window.authBypassChallenge) {
+            window.authBypassChallenge.checkAccess();
+        }
+    }, 500);
 }
 
 // Инициализация на странице Auth Bypass

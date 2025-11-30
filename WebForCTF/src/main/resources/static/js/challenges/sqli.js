@@ -18,10 +18,7 @@ class SQLInjectionChallenge {
 
     initEventListeners() {
         const loginForm = document.getElementById('loginForm');
-        const hintButton = document.querySelector('.hint-button');
-        const validateFlagBtn = document.getElementById('validateFlagBtn');
         const resetChallengeBtn = document.getElementById('resetChallengeBtn');
-        // УДАЛЕНО: showSolutionBtn
 
         if (loginForm) {
             loginForm.addEventListener('submit', (e) => {
@@ -30,25 +27,11 @@ class SQLInjectionChallenge {
             });
         }
 
-        if (hintButton) {
-            hintButton.addEventListener('click', () => {
-                this.toggleHint();
-            });
-        }
-
-        if (validateFlagBtn) {
-            validateFlagBtn.addEventListener('click', () => {
-                this.validateFlag();
-            });
-        }
-
         if (resetChallengeBtn) {
             resetChallengeBtn.addEventListener('click', () => {
                 this.resetChallenge();
             });
         }
-
-        // УДАЛЕНО: обработчик для showSolutionBtn
     }
 
     async loadChallengeInfo() {
@@ -208,76 +191,6 @@ class SQLInjectionChallenge {
         }
     }
 
-    toggleHint() {
-        const hintContent = document.getElementById('hintContent');
-        const hintButton = document.querySelector('.hint-button');
-
-        if (hintContent && hintButton) {
-            hintContent.classList.toggle('show');
-            hintButton.textContent = hintContent.classList.contains('show') ?
-                'Hide Hint' : 'Show Hint';
-        }
-    }
-
-    async validateFlag() {
-        const flagInput = document.getElementById('flagInput');
-        const flagMessage = document.getElementById('flagMessage');
-
-        if (!flagInput || !flagMessage) return;
-
-        const flag = flagInput.value.trim();
-        if (!flag) {
-            this.showFlagMessage('Please enter a flag', 'error');
-            return;
-        }
-
-        try {
-            const response = await fetch('/challenges/sqli/validate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `flag=${encodeURIComponent(flag)}`
-            });
-
-            const result = await response.json();
-            this.showFlagMessage(result.message, result.success ? 'success' : 'error');
-
-            if (result.success) {
-                flagInput.value = '';
-                this.isSolved = true;
-            }
-        } catch (error) {
-            console.error('Flag validation error:', error);
-            this.showFlagMessage('Validation error. Please try again.', 'error');
-        }
-    }
-
-    showFlagMessage(message, type) {
-        const flagMessage = document.getElementById('flagMessage');
-        if (!flagMessage) return;
-
-        flagMessage.textContent = message;
-        flagMessage.className = `message ${type}`;
-        flagMessage.style.display = 'block';
-
-        if (type === 'success') {
-            setTimeout(() => {
-                flagMessage.style.display = 'none';
-            }, 5000);
-        }
-    }
-
-    async getHint() {
-        try {
-            const response = await CTFUtils.fetchJSON('/challenges/sqli/hint');
-            return response.hint;
-        } catch (error) {
-            console.error('Error getting hint:', error);
-            return 'Hint not available';
-        }
-    }
-
     resetChallenge() {
         this.attempts = 0;
         this.isSolved = false;
@@ -291,20 +204,8 @@ class SQLInjectionChallenge {
             msg.textContent = '';
         });
 
-        const hintContent = document.getElementById('hintContent');
-        if (hintContent) {
-            hintContent.classList.remove('show');
-        }
-
-        const hintButton = document.querySelector('.hint-button');
-        if (hintButton) {
-            hintButton.textContent = 'Show Hint';
-        }
-
         this.showMessage('Challenge has been reset', 'info');
     }
-
-    // УДАЛЕН МЕТОД showSolution()
 }
 
 // Инициализация на странице SQL Injection

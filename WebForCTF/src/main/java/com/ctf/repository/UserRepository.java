@@ -11,6 +11,9 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    @Query("SELECT u FROM User u ORDER BY u.score DESC, u.createdAt ASC")
+    List<User> findTopUsers();
+
 
     boolean existsByUsername(String username);
 
@@ -19,10 +22,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
     Optional<User> findByUsername(String username);
-
-
-    @Query("SELECT u FROM User u ORDER BY u.score DESC")
-    List<User> findTopUsers();
 
 
     @Query("SELECT u FROM User u ORDER BY u.createdAt DESC")

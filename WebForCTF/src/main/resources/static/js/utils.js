@@ -52,14 +52,14 @@ class CTFUtils {
         return div.innerHTML;
     }
 
-    static copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(() => {
-            CTFPlatform.showNotification('Copied to clipboard!', 'success');
-        }).catch(err => {
-            console.error('Failed to copy: ', err);
-            CTFPlatform.showNotification('Failed to copy to clipboard', 'error');
-        });
-    }
+static copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        window.CTFPlatform.showNotification('Copied to clipboard!', 'success');
+    }).catch(err => {
+        console.error('Failed to copy: ', err);
+        window.CTFPlatform.showNotification('Failed to copy to clipboard', 'error');
+    });
+}
 
     static animateValue(element, start, end, duration) {
         let startTimestamp = null;
