@@ -18,7 +18,7 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     Optional<Challenge> findByFlag(String flag);
     
     // Уязвимый метод для демонстрации SQL инъекции
-    @Query(value = "SELECT * FROM challenges WHERE title = ':title'", nativeQuery = true)
+    @Query(value = "SELECT * FROM challenges WHERE title = :title", nativeQuery = true)
     List<Challenge> findVulnerableByTitle(@Param("title") String title);
     
     // Безопасный метод

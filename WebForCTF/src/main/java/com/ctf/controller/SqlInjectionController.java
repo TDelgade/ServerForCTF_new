@@ -46,6 +46,11 @@ public class SqlInjectionController {
 
         System.out.println("SQL Injection attempt - Username: " + username + ", Password: " + password);
 
+        // Логируем попытку для отладки
+        if (username.contains("'") || password.contains("'")) {
+            System.out.println("Potential SQL injection detected!");
+        }
+
         if (challengeService.validateSqlInjection(username, password)) {
             // Успешная SQL инъекция - возвращаем флаг
             return challengeService.getChallengeByTitle("SQL Injection Basic")

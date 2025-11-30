@@ -101,30 +101,41 @@ public class ChallengeService {
         return challenge.isPresent() && challenge.get().getFlag().equals(flag);
     }
 
-    // Уязвимый метод для SQL инъекции
     public boolean validateSqlInjection(String username, String password) {
-        // Эмулируем уязвимый SQL запрос
         String vulnerableQuery = "SELECT * FROM users WHERE username = '" + username + "' AND password = '" + password + "'";
-
         System.out.println("Executing vulnerable query: " + vulnerableQuery);
 
-        // Проверяем различные векторы SQL инъекции
-        if (username.contains("' OR '1'='1") ||
-                username.contains("' OR 1=1--") ||
-                username.contains("' OR 'a'='a") ||
-                username.contains("admin'--") ||
-                username.contains("' UNION SELECT") ||
-                username.contains("'; DROP TABLE") ||
-                username.contains("' OR 'x'='x")) {
-            return true;
-        }
+        // Нормализуем входные данные для проверки
+        String normalizedUsername = username.trim().toLowerCase();
+        String normalizedPassword = password.trim().toLowerCase();
 
-        // Проверяем правильные credentials (для тестирования)
-        if ("admin".equals(username) && "password123".equals(password)) {
-            return true;
-        }
+        // Расширенная и более гибкая проверка SQL инъекций
+        boolean isSqlInjection =
+                // Классические инъекции в username
+                normalizedUsername.contains("' or '1'='1") ||
+                        normalizedUsername.contains("' or 1=1--") ||
+                        normalizedUsername.contains("admin'--") ||
+                        normalizedUsername.contains("' or 'a'='a") ||
+                        normalizedUsername.contains("' or 'x'='x") ||
+                        normalizedUsername.contains("' or ''='") ||
+                        normalizedUsername.endsWith("'--") ||
+                        normalizedUsername.contains("' union select") ||
 
-        return false;
+                        // Инъекции в password
+                        normalizedPassword.contains("' or '1'='1") ||
+                        normalizedPassword.contains("' or 1=1--") ||
+
+                        // Более гибкие проверки
+                        username.contains("'") && (username.contains("or") || username.contains("OR")) ||
+                        username.contains("--") ||
+                        username.contains("/*") ||
+
+                        // Проверяем обход аутентификации
+                        (!username.equals("admin") && username.contains("'--")) ||
+                        username.matches(".*'\\s*(OR|or)\\s*'.*'.*");
+
+        System.out.println("SQL Injection detected: " + isSqlInjection);
+        return isSqlInjection;
     }
 
     // Метод для проверки Path Traversal
