@@ -18,14 +18,19 @@ public class Users {
 
     @Column(nullable = false)
     private int points = 0;
+    @Column(name = "points_lab", nullable = false)
+    private int pointsLab = 0;
+
 
     public Users() {}
 
-    public Users(String login, String password, int points) {
+    public Users(String login, String password, int points, int pointsLab) {
         this.login = login;
         this.password = password;
         this.points = points;
+        this.pointsLab = pointsLab;
     }
+
 
     // ======================
     // DTO для отображения очков
@@ -33,15 +38,25 @@ public class Users {
     public static class UserNamePointsDTO {
         private String name;
         private int points;
+        private int pointsLab;
 
-        public UserNamePointsDTO(String name, int points) {
+        public UserNamePointsDTO(String name, int points, int pointsLab) {
             this.name = name;
             this.points = points;
+            this.pointsLab = pointsLab;
         }
 
-        // геттеры
         public String getName() { return name; }
         public int getPoints() { return points; }
+        public int getPointsLab() { return pointsLab; }
+    }
+
+    public int getPointsLab() {
+        return pointsLab;
+    }
+
+    public void setPointsLab(int pointsLab) {
+        this.pointsLab = pointsLab;
     }
 
     public Long getId() { return id; }
@@ -61,6 +76,7 @@ public class Users {
                 "id=" + id +
                 ", login='" + login + '\'' +
                 ", points=" + points +
+                ", pointsLab=" + pointsLab +
                 '}';
     }
 }

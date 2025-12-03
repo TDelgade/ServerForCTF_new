@@ -2,7 +2,6 @@ package com.example.demo.service;
 
 import com.example.demo.Users;
 import com.example.demo.repository.UsersRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,11 +11,9 @@ import java.util.Optional;
 public class UsersService {
 
     private final UsersRepository usersRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
 
-    public UsersService(UsersRepository usersRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UsersService(UsersRepository usersRepository) {
         this.usersRepository = usersRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Users> getTop3Users() {
@@ -34,8 +31,9 @@ public class UsersService {
 
         Users user = new Users();
         user.setLogin(login);
-        user.setPassword(passwordEncoder.encode(rawPassword));
-        user.setPoints(0); // ОБЯЗАТЕЛЬНО
+        user.setPassword(rawPassword); // Без BCrypt
+        user.setPoints(0);
+        user.setPointsLab(0);
 
         return usersRepository.save(user);
     }
@@ -50,7 +48,7 @@ public class UsersService {
 
     public boolean checkPassword(String login, String rawPassword) {
         Optional<Users> userOpt = usersRepository.findByLogin(login);
-        return userOpt.map(user -> passwordEncoder.matches(rawPassword, user.getPassword()))
+        return userOpt.map(user -> rawPassword.equals(user.getPassword()))
                 .orElse(false);
     }
 
@@ -59,7 +57,7 @@ public class UsersService {
     }
 
     /** Создать или обновить пользователя */
-    public Users createOrUpdateUser(String login, String rawPassword, int points) {
+    public Users createOrUpdateUser(String login, String rawPassword, int points, int pointsLab) {
         Optional<Users> userOpt = usersRepository.findByLogin(login);
         Users user;
 
@@ -70,25 +68,22 @@ public class UsersService {
             user.setLogin(login);
         }
 
-
-        user.setPassword(passwordEncoder.encode(rawPassword));
-
+        user.setPassword(rawPassword); // Без BCrypt
         user.setPoints(points);
+        user.setPointsLab(pointsLab);
 
         return usersRepository.save(user);
     }
 
 
-
-
-    /** Получаем кол-во очков */
+    /** Получаем кол-во обычных очков */
     public int getPoints(String login) {
         Users user = usersRepository.findByLogin(login)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return user.getPoints();
     }
 
-    /** Рейтинг  */
+    /** Установить обычные очки */
     public void setPoints(String login, int newPoints) {
         Users user = usersRepository.findByLogin(login)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -96,7 +91,7 @@ public class UsersService {
         usersRepository.save(user);
     }
 
-    /** Добавляем очки */
+    /** Добавляем обычные очки */
     public void addPoints(String login, int amount) {
         Users user = usersRepository.findByLogin(login)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -104,7 +99,7 @@ public class UsersService {
         usersRepository.save(user);
     }
 
-    /** Списываем очки */
+    /** Списываем обычные очки */
     public void subtractPoints(String login, int amount) {
         Users user = usersRepository.findByLogin(login)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -115,4 +110,56 @@ public class UsersService {
         usersRepository.save(user);
     }
 
+    /** Получаем лабораторные очки */
+    public int getPointsLab(String login) {
+        Users user = usersRepository.findByLogin(login)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return user.getPointsLab();
+    }
+
+    /** Устанавливаем лабораторные очки */
+    public void setPointsLab(String login, int newPoints) {
+        Users user = usersRepository.findByLogin(login)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setPointsLab(newPoints);
+        usersRepository.save(user);
+    }
+
+    /** Добавляем лабораторные очки */
+    public void addPointsLab(String login, int amount) {
+        Users user = usersRepository.findByLogin(login)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setPointsLab(user.getPointsLab() + amount);
+        usersRepository.save(user);
+    }
+
+    /** Списываем лабораторные очки */
+    public void subtractPointsLab(String login, int amount) {
+        Users user = usersRepository.findByLogin(login)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        int newPoints = Math.max(0, user.getPointsLab() - amount);
+        user.setPointsLab(newPoints);
+        usersRepository.save(user);
+    }
+
+    // ====== METHODS FOR Base CONTROLLER (чтобы не ломать Base.java) ======
+
+    public int getLabPoints(String login) {
+        return getPointsLab(login);
+    }
+
+    public void setLabPoints(String login, int amount) {
+        setPointsLab(login, amount);
+    }
+
+    public void addLabPoints(String login, int amount) {
+        addPointsLab(login, amount);
+    }
+
+    public void subtractLabPoints(String login, int amount) {
+        subtractPointsLab(login, amount);
+    }
 }

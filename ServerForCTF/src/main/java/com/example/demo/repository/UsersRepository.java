@@ -17,6 +17,7 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
 
     List<Users> findTop3ByOrderByPointsDesc();
 
-    @Query("SELECT new com.example.demo.Users$UserNamePointsDTO(u.login, u.points) FROM Users u")
+    @Query("SELECT new com.example.demo.Users$UserNamePointsDTO(u.login, u.points, u.pointsLab) FROM Users u")
     List<Users.UserNamePointsDTO> findAllNames();
+
 }

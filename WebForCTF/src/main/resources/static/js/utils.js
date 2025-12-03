@@ -86,14 +86,14 @@ static copyToClipboard(text) {
         window.history.replaceState({}, '', url);
     }
 
-    static randomString(length = 10) {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let result = '';
-        for (let i = 0; i < length; i++) {
-            result += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return result;
-    }
+//    static randomString(length = 10) {
+//        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+//        let result = '';
+//        for (let i = 0; i < length; i++) {
+//            result += chars.charAt(Math.floor(Math.random() * chars.length));
+//        }
+//        return result;
+//    }
 
     static formatBytes(bytes, decimals = 2) {
         if (bytes === 0) return '0 Bytes';

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Тест</title>
+
+    <!-- Главный стиль платформы -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/pages/home.css">
+    <link rel="stylesheet" href="/css/components/header.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body class="body-users">
+
+<div class="background"></div>
+<div class="particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+</div>
+
+<div class="container">
+
+    <section class="hero" style="padding: 40px 0;">
+        <div class="hero-content">
+            <h1 class="hero-title">ТЕСТИРОВАНИЕ</h1>
+            <p class="hero-subtitle">Пройдите небольшой тест и проверьте свои знания.</p>
+        </div>
+    </section>
+
+    <div class="task-details" style="max-width: 800px; margin: 0 auto; padding: 25px;">
+        <h2 class="section-title" style="text-align:center;">Тест</h2>
+
+        <!-- ВОПРОСЫ ТИПА "ВЫБОР ОТВЕТА" -->
+        <div class="question" data-type="choice" data-correct="b" style="margin-bottom:25px;">
+            <p class="task-desc">1. Какой цвет является основным?</p>
+            <label><input type="radio" name="q1" value="a"> Красный</label><br>
+            <label><input type="radio" name="q1" value="b"> Синий</label><br>
+            <label><input type="radio" name="q1" value="c"> Зелёный</label>
+        </div>
+
+        <!-- ВОПРОСЫ С ВПИСЫВАНИЕМ ОТВЕТА -->
+        <div class="question" data-type="input" data-correct="HTML" style="margin-bottom:25px;">
+            <p class="task-desc">2. Как называется язык разметки веб-страниц?</p>
+            <input type="text" class="answer-input" placeholder="Введите ответ...">
+        </div>
+
+        <button id="checkBtn" class="cta-btn primary glow" onclick="checkTest()">Проверить</button>
+
+        <div id="result" class="task-title" style="margin-top:25px; text-align:center;"></div>
+
+        <!-- Кнопка возврата на главную (скрыта по умолчанию) -->
+        <div id="backContainer" style="text-align:center; margin-top:20px; display:none;">
+            <a href="/" class="cta-btn secondary glow">Вернуться на главную</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function checkTest() {
+        const questions = document.querySelectorAll('.question');
+        let score = 0;
+
+        questions.forEach(q => {
+            const type = q.dataset.type;
+            const correct = q.dataset.correct.trim().toLowerCase();
+
+            if (type === 'choice') {
+                const selected = q.querySelector('input[type="radio"]:checked');
+                if (selected && selected.value.toLowerCase() === correct) score++;
+            }
+
+            if (type === 'input') {
+                const value = q.querySelector('.answer-input').value.trim().toLowerCase();
+                if (value === correct.toLowerCase()) score++;
+            }
+        });
+
+        document.getElementById('result').innerText = `Ваш результат: ${score} / ${questions.length}`;
+
+        document.getElementById('backContainer').style.display = 'block';
+        document.getElementById('checkBtn').style.display = 'none';
+
+
+        fetch("/tests/complete", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(r => {
+            if (!r.ok) console.error("Ошибка при сохранении результата теста");
+        }).catch(err => console.error("Ошибка отправки:", err));
+    }
+</script>
+
+
+
+</body>
+</html>
