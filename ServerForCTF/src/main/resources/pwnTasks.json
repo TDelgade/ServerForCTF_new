@@ -5,7 +5,8 @@
         "description": "Вам дан бинарный файл challenge.\nФлаг спрятан внутри строки в исполняемом файле.\nНикакого запуска не требуется — просто извлеките строку.",
         "solved": false,
         "points": 2,
-        "difficulty": "easy"
+        "difficulty": "easy",
+        "flag": "CTF{str1ngs_aRe_p0werful}"
     },
     {
         "category": "pwn",
@@ -13,7 +14,8 @@
         "description": "Простая программа сравнивает ввод со строкой, флаг лежит в этой строке.\nВ бинаре login есть строка с правильным паролем.\nНайдите её с помощью strings или r2.",
         "solved": false,
         "points": 2,
-        "difficulty": "easy"
+        "difficulty": "easy",
+        "flag": "CTF{sUper_secrEt_pwd}"
     },
     {
         "category": "pwn",
@@ -21,7 +23,8 @@
         "description": "Флаг находится в секции .rodata.\nНайдите флаг, спрятанный в .rodata бинаря ro.exe.",
         "solved": false,
         "points": 2,
-        "difficulty": "easy"
+        "difficulty": "easy",
+        "flag": "CTF{rodata_reveals_all}"
     },
     {
         "category": "pwn",
@@ -29,7 +32,8 @@
         "description": "Вам дана программа, в которой можно переполнить ввод и получить скрытое сообщение.\nПодайте более 32 символов.",
         "solved": false,
         "points": 3,
-        "difficulty": "easy"
+        "difficulty": "easy",
+        "flag": "CTF{overflow_detected}"
     },
     {
         "category": "pwn",
@@ -37,7 +41,8 @@
         "description": "Если ввести строку «admin», программа печатает флаг.\nНо строка не документирована.\nИзучите бинарь check. При каком вводе программа раскрывает флаг?",
         "solved": false,
         "points": 2,
-        "difficulty": "easy"
+        "difficulty": "easy",
+        "flag": "CTF{admin_access_granted}"
     },
     {
         "category": "pwn",
@@ -45,7 +50,8 @@
         "description": "Программа читает переменную FLAG_VAR.\nНайдите флаг в бинаре.",
         "solved": false,
         "points": 2,
-        "difficulty": "easy"
+        "difficulty": "easy",
+        "flag": "CTF{environment_matters}"
     },
     {
         "category": "pwn",
@@ -53,7 +59,8 @@
         "description": "В бинаре есть строка, которая хешируется MD5. Найдите её.",
         "solved": false,
         "points": 3,
-        "difficulty": "easy"
+        "difficulty": "easy",
+        "flag": "CTF{md5_input_string}"
     },
     {
         "category": "pwn",
@@ -61,7 +68,8 @@
         "description": "Флаг зашит в mov-инструкцию: mov rdi, offset flag_string. Откройте бинарь в radare2 и найдите строку флага.",
         "solved": false,
         "points": 2,
-        "difficulty": "easy"
+        "difficulty": "easy",
+        "flag": "CTF{disassembly_never_lies}"
     },
     {
         "category": "pwn",
@@ -69,7 +77,8 @@
         "description": "Функция проверяет, что длина строки == 8. Найдите, какой пароль должен быть введён (он хранится в бинаре).",
         "solved": false,
         "points": 2,
-        "difficulty": "easy"
+        "difficulty": "easy",
+        "flag": "CTF{len_eq_8}"
     },
     {
         "category": "pwn",
@@ -77,7 +86,8 @@
         "description": "В бинаре есть printf(input); — форматная строка. Флаг хранится в стеке. Получите флаг, используя %x-формат.",
         "solved": false,
         "points": 3,
-        "difficulty": "easy"
+        "difficulty": "easy",
+        "flag": "CTF{stack_leak_success}"
     },
     {
         "category": "pwn",
@@ -85,7 +95,8 @@
         "description": "Найдите оффсет EIP/RIP и перепишите адрес возврата на функцию win.",
         "solved": false,
         "points": 6,
-        "difficulty": "medium"
+        "difficulty": "medium",
+        "flag": "CTF{ret2win_master}"
     },
     {
         "category": "pwn",
@@ -93,7 +104,8 @@
         "description": "Используйте уязвимость форматных строк (printf(input)), чтобы узнать защитное значение canary.\nФлаг — это значение canary.",
         "solved": false,
         "points": 7,
-        "difficulty": "medium"
+        "difficulty": "medium",
+        "flag": "CTF{00ffd2a3}"
     },
     {
         "category": "pwn",
@@ -101,7 +113,8 @@
         "description": "При освобождении объекта его содержимое остаётся в памяти. Используйте это, чтобы прочитать флаг.",
         "solved": false,
         "points": 6,
-        "difficulty": "medium"
+        "difficulty": "medium",
+        "flag": "CTF{use_after_free_done}"
     },
     {
         "category": "pwn",
@@ -109,7 +122,8 @@
         "description": "Переполнение позволяет перезаписать только младший байт адреса возврата. Вам нужно подменить только последний байт RIP на адрес, ведущий в win.",
         "solved": false,
         "points": 7,
-        "difficulty": "medium"
+        "difficulty": "medium",
+        "flag": "CTF{partial_win_achieved}"
     },
     {
         "category": "pwn",
@@ -117,7 +131,8 @@
         "description": "Утеките адрес функции puts через GOT. Флаг — это утёкший адрес функции.",
         "solved": false,
         "points": 6,
-        "difficulty": "medium"
+        "difficulty": "medium",
+        "flag": "CTF{0x7ffff7a5d690}"
     },
     {
         "category": "pwn",
@@ -125,7 +140,8 @@
         "description": "NX отключён, нужно залить обычный /bin/sh шеллкод. Загрузите в программу шеллкод и получите флаг.",
         "solved": false,
         "points": 7,
-        "difficulty": "medium"
+        "difficulty": "medium",
+        "flag": "CTF{shell_spawned_successfully}"
     },
     {
         "category": "pwn",
@@ -133,7 +149,8 @@
         "description": "Утеките значение stack canary через format-string и выполните overflow корректно.",
         "solved": false,
         "points": 7,
-        "difficulty": "medium"
+        "difficulty": "medium",
+        "flag": "CTF{0x00a1b2c3}"
     },
     {
         "category": "pwn",
@@ -141,7 +158,8 @@
         "description": "Найдите способ двойного освобождения объекта и извлеките флаг, хранящийся в освобождённом чанке.",
         "solved": false,
         "points": 6,
-        "difficulty": "medium"
+        "difficulty": "medium",
+        "flag": "CTF{double_free_won}"
     },
     {
         "category": "pwn",
@@ -149,7 +167,8 @@
         "description": "Утеките адрес puts в libc, вычислите адрес system и /bin/sh, получите флаг.",
         "solved": false,
         "points": 8,
-        "difficulty": "medium"
+        "difficulty": "medium",
+        "flag": "CTF{ret2libc_complete}"
     },
     {
         "category": "pwn",
@@ -157,6 +176,7 @@
         "description": "Используя ROP-гаджеты, вызовите system(\"/bin/sh\"). Флаг печатается автоматически.",
         "solved": false,
         "points": 8,
-        "difficulty": "medium"
+        "difficulty": "medium",
+        "flag": "CTF{rop_chain_executed}"
     }
 ]

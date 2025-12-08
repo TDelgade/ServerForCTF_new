@@ -10,32 +10,36 @@ public class TaskPWN {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "category", nullable = false)
     private String category;
 
-    @Column(nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(nullable = false)
+    @Column(name = "solved", nullable = false)
     private boolean solved = false;
 
-    @Column(nullable = false)
+    @Column(name = "points", nullable = false)
     private int points;
 
-    @Column(nullable = false)
+    @Column(name = "difficulty", nullable = false)
     private String difficulty;
+
+    @Column(name = "flag", nullable = false)
+    private String flag;
 
     public TaskPWN() {}
 
-    public TaskPWN(String category, String description, String title, int points, String difficulty) {
+    public TaskPWN(String category, String description, String title, int points, String difficulty, String flag) {
         this.category = category;
         this.description = description;
         this.title = title;
         this.points = points;
         this.difficulty = difficulty;
+        this.flag = flag;
     }
 
     public Long getId() { return id; }
@@ -43,6 +47,7 @@ public class TaskPWN {
     public String getDescription() { return description; }
     public String getTitle() { return title; }
     public String getDifficulty() { return difficulty; }
+    public String getFlag() { return flag; }
 
     public void setTitle(String title) { this.title = title; }
 
@@ -55,18 +60,19 @@ public class TaskPWN {
 
     public void setDifficulty(String difficulty) { this.difficulty = difficulty; }
 
+    public void setFlag(String flag) { this.flag = flag; }
+
     public int getPoints() { return points; }
     public void setPoints(int points) { this.points = points; }
 
     @Override
     public String toString() {
         return "TaskPWN{" +
-                "id=" + id +
-                ", category=" + category +
-                ", title='" + title + '\'' +
+                "id=" + id + '\'' +
+                ", title=" + title + '\'' +
                 ", category=" + category + '\'' +
-                ", solved=" + solved +
-                ", points=" + points +
+                ", solved=" + solved + '\'' +
+                ", points=" + points + '\'' +
                 '}';
     }
 }

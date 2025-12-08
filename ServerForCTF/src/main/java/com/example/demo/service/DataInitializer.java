@@ -12,16 +12,19 @@ import com.example.demo.service.TaskService;
 import com.example.demo.TaskPWN;
 import com.example.demo.service.TaskPWNService;
 
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.io.*;
+import java.math.BigInteger;
 
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
-public class DataInitializer implements CommandLineRunner {
+public class DataInitializer implements CommandLineRunner  {
 
     private final UsersService usersService;
     private final PromoService promoService;
@@ -33,6 +36,25 @@ public class DataInitializer implements CommandLineRunner {
         this.promoService = promoService;
         this.taskService = taskService;
         this.taskPWNService = taskPWNService;
+    }
+
+     public static String sha256(String input) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = digest.digest(input.getBytes(StandardCharsets.UTF_8));
+
+            // Переводим байты в hex строку
+            StringBuilder hexString = new StringBuilder(2 * hashBytes.length);
+            for (byte b : hashBytes) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0'); // добавляем ведущий 0
+                hexString.append(hex);
+            }
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("SHA-256 не поддерживается", e);
+        }
     }
 
     @Override
@@ -173,6 +195,7 @@ public class DataInitializer implements CommandLineRunner {
         );
 
         for (TaskPWN task : tasks) {
+                task.setFlag(sha256(task.getFlag()));
             if (taskPWNService.getTaskByTitle(task.getTitle()).isEmpty()) {
                 taskPWNService.createTask(task);
                 System.out.println("Добавлено новое задание: " + task.getTitle() + " (" + task.getPoints() + " баллов)");
