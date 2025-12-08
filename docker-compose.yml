@@ -30,6 +30,15 @@ services:
     networks:
       - appnet
     restart: unless-stopped
+  
+  pwnprogs:
+    build: ./ServerForCTF/pwnbinaries
+    container_name: python-c
+    ports:
+      - "5000:5000"
+    networks:
+      - appnet
+    restart: unless-stopped
 
   frontend:
     build: ./WebForCTF

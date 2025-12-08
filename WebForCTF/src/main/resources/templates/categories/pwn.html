@@ -205,41 +205,28 @@
 
     <!-- Правая колонка с деталями -->
     <div class="task-details" id="taskDetails">
-        <div class="task-title">Выберите задание</div>
+        <div class="task-title" id="taskTitle">Выберите задание</div>
         <div class="task-desc">Описание задания появится здесь</div>
         <div class="letters" id="lettersContainer"></div>
         <div class="answer-section">
-            <input type="text" class="answer-input" placeholder="Введите ответ">
-            <button class="submit-btn">Ответ</button>
+            <input type="text" class="answer-input" id="answerInput" placeholder="Введите ответ">
+            <button class="submit-btn" id="submitBtn">Ответ</button>
         </div>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<script src="/js/loadPWNtasks.js"></script>
+<script src="/js/postPWNtasks.js"></script>
+
 
 <script>
     const apiBaseUrl = 'http://localhost:8081';
     const tasksList = document.getElementById('tasksList');
 
-    async function loadTasks() {
-        let tasks = []
-        try {
-            const response = await fetch(`${apiBaseUrl}/taskspwn/available`);
-            if (!response.ok) {
-                throw new Error(`Ошибка HTTP: ${response.status}`);
-            }
-            tasks = await response.json();
-            console.log(tasks[1]);
-            return tasks;
-        } catch (error) {
-            console.error('Ошибка загрузки задач:', error);
-            tasksList.innerHTML = '<div class="error">Ошибка загрузки задач</div>';
-        }
-    }
-
     async function init() {
-        // Ждем загрузки задач
         tasks = await loadTasks();
         num = 1;
-        console.log('Tasks после загрузки:', tasks);
         
         if (tasks && tasks.length > 0) {
             tasks.forEach((task, index) => {
